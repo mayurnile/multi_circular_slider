@@ -32,7 +32,7 @@ class MultiCircularSlider extends StatefulWidget {
   ///
   ///
   ///
-  ///`color` different colors which you want to give to the progress bars
+  ///`colors` different colors which you want to give to the progress bars
   ///
   ///NOTE : Length of values should be equal to length of colors
   ///
@@ -51,6 +51,12 @@ class MultiCircularSlider extends StatefulWidget {
   ///`progressBarWidth` stroke width of the progressBar
   ///
   ///default values is set to 32.0
+  ///
+  ///
+  ///`trackColor` color of the track of progressBar
+  ///
+  ///default values is set to Colors.grey
+  ///
   ///
   ///
   ///

@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 7th December 2020.
 
-* TODO: Describe initial release.
+* First release of Multi Circular Slider for Flutter.
