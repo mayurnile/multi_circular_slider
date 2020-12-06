@@ -7,6 +7,8 @@
 A highly customizable progress bar for Flutter which helps showing multiple values in single progress bar with different 
 colors and also animate it for you.
 
+### Preview
+
 ![](./assets/preview.gif)
 
 ## Getting Started

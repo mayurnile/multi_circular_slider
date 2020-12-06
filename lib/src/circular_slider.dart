@@ -132,30 +132,39 @@ class _MultiCircularSliderState extends State<MultiCircularSlider> with SingleTi
   void initState() {
     super.initState();
 
+    //calculating total percentage
     widget.values.forEach((value) {
       percentage += value;
     });
 
+    //initializing controller
     _controller = AnimationController(vsync: this, duration: widget.animationDuration);
+
+    //initializing animation
     _animation = Tween(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: widget.animationCurve));
 
+    //starting animation
     _controller.forward();
   }
 
   @override
   void dispose() {
+    //dispose controller to avoid memory leaks
     _controller.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    //actual widget starts here
     return AnimatedBuilder(
       animation: _animation,
       builder: (BuildContext context, Widget child) {
+        //custom painter to draw multiple progress bar
         return CustomPaint(
           painter: ProgressBarPainter(
             size: widget.size,
@@ -165,6 +174,7 @@ class _MultiCircularSliderState extends State<MultiCircularSlider> with SingleTi
             trackColor: widget.trackColor,
             trackWidth: widget.trackWidth,
           ),
+          //inner widget with shadow
           child: Container(
             height: widget.size,
             width: widget.size,
@@ -172,56 +182,56 @@ class _MultiCircularSliderState extends State<MultiCircularSlider> with SingleTi
             child: widget.innerWidget != null
                 ? widget.innerWidget
                 : Container(
-              padding: const EdgeInsets.all(32.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.07),
-                    blurRadius: 10.0,
-                    offset: Offset(0.0, -18.0),
-                  ),
-                ],
-              ),
-              child: widget.showTotalPercentage
-                  ? Column(
-                children: [
-                  //inner icon
-                  widget.innerIcon != null ? widget.innerIcon : SizedBox.shrink(),
-                  //total percentage
-                  Text(
-                    '${(percentage * _animation.value * 100).ceil()}%',
-                    textAlign: TextAlign.center,
-                    style: widget.percentageTextStyle != null
-                        ? widget.percentageTextStyle
-                        : TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 28.0,
-                      color: Color(0xFF012C61),
+                    padding: const EdgeInsets.all(32.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.07),
+                          blurRadius: 10.0,
+                          offset: Offset(0.0, -18.0),
+                        ),
+                      ],
                     ),
+                    child: widget.showTotalPercentage
+                        ? Column(
+                            children: [
+                              //inner icon
+                              widget.innerIcon != null ? widget.innerIcon : SizedBox.shrink(),
+                              //total percentage
+                              Text(
+                                '${(percentage * _animation.value * 100).ceil()}%',
+                                textAlign: TextAlign.center,
+                                style: widget.percentageTextStyle != null
+                                    ? widget.percentageTextStyle
+                                    : TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 28.0,
+                                        color: Color(0xFF012C61),
+                                      ),
+                              ),
+                              //spacing
+                              SizedBox(height: 8.0),
+                              //text
+                              widget.label != null
+                                  ? FittedBox(
+                                      child: Text(
+                                        widget.label,
+                                        style: widget.labelTextStyle != null
+                                            ? widget.labelTextStyle
+                                            : TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 22.0,
+                                                color: Color(0xFF939AA4),
+                                              ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          )
+                        : SizedBox.shrink(),
                   ),
-                  //spacing
-                  SizedBox(height: 8.0),
-                  //text
-                  widget.label != null
-                      ? FittedBox(
-                    child: Text(
-                      widget.label,
-                      style: widget.labelTextStyle != null
-                          ? widget.labelTextStyle
-                          : TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 22.0,
-                        color: Color(0xFF939AA4),
-                      ),
-                    ),
-                  )
-                      : SizedBox.shrink(),
-                ],
-              )
-                  : SizedBox.shrink(),
-            ),
           ),
         );
       },
