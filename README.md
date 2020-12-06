@@ -1,6 +1,8 @@
 # Multi Circular Slider
 
-[![Pub Version](https://img.shields.io/pub/v/badges?color=blueviolet)](https://pub.dev/packages/multi_circular_slider)
+![License: MIT](https://img.shields.io/github/license/mayurnile/multi_circular_slider)
+
+[![Pub Version](https://img.shields.io/pub/v/multi_circular_slider?color=blueviolet)](https://pub.dev/packages/multi_circular_slider)
 
 A highly customizable progress bar for Flutter which helps showing multiple values in single progress bar with different 
 colors and also animate it for you.
