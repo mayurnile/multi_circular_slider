@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './multi_circular_slider.dart';
+import 'package:multi_circular_slider/multi_circular_slider.dart';
 
 void main() {
   runApp(MyApp());
