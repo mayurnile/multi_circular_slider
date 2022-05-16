@@ -22,18 +22,18 @@ class ProgressBarPainter extends CustomPainter {
 
   //constructor
   ProgressBarPainter({
-    @required this.size,
+    required this.size,
     this.trackWidth = 32.0,
     this.progressBarWidth = 32.0,
-    @required this.values,
-    @required this.colors,
+    required this.values,
+    required this.colors,
     this.trackColor = Colors.grey,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     //base angle of curve
-    final double baseAngle = 180.0;
+    const double baseAngle = 180.0;
     //actual starting angle of arc
     final double startAngle = degreeToRadians(baseAngle);
     //total length of the track of progressbar
@@ -44,11 +44,11 @@ class ProgressBarPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke
       ..color = Colors.black.withOpacity(0.1)
-      ..maskFilter = MaskFilter.blur(
+      ..maskFilter = const MaskFilter.blur(
         BlurStyle.normal,
         10.0,
       )
-      ..strokeWidth = 42.0;
+      ..strokeWidth = trackWidth;
     //draw shadow
     drawCurve(
       canvas,
@@ -63,7 +63,7 @@ class ProgressBarPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke
       ..color = trackColor
-      ..strokeWidth = 32.0;
+      ..strokeWidth = trackWidth;
     //progress bar track curve
     drawCurve(
       canvas,
@@ -78,7 +78,7 @@ class ProgressBarPainter extends CustomPainter {
     double totalPercentage = 0.0;
 
     //to store values in reverse order
-    List<Shader> _progressBars = [];
+    List<Shader> progressBars = [];
 
     //iterating through list for calculating values
     for (int i = 0; i < length; i++) {
@@ -92,10 +92,10 @@ class ProgressBarPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke
         ..color = colors[i]
-        ..strokeWidth = 32.0;
+        ..strokeWidth = trackWidth;
 
       //adding values to list
-      _progressBars.insert(
+      progressBars.insert(
         0,
         Shader(
           startAngle: startAngle,
@@ -106,7 +106,7 @@ class ProgressBarPainter extends CustomPainter {
     }
 
     //drawing actual progress bars
-    _progressBars.forEach((progressBar) {
+    for (final progressBar in progressBars) {
       drawCurve(
         canvas,
         size,
@@ -114,7 +114,7 @@ class ProgressBarPainter extends CustomPainter {
         progressBar.sweepAngle,
         progressBar.paint,
       );
-    });
+    }
   }
 
   ///[Logic for drawing curve]
@@ -161,8 +161,8 @@ class Shader {
   final Paint paint;
 
   Shader({
-    @required this.startAngle,
-    @required this.sweepAngle,
-    @required this.paint,
+    required this.startAngle,
+    required this.sweepAngle,
+    required this.paint,
   });
 }

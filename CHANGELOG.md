@@ -9,3 +9,7 @@
 ## [0.0.3] - 7th December 2020.
 
 * Re-formatted some code for readability.
+
+## [1.0.0] - 16th May 2022.
+* Migrated to Null Safety
+* Solved issue track width not getting adjusted

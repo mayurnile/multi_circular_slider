@@ -15,12 +15,12 @@ class MultiCircularSlider extends StatefulWidget {
   final Color trackColor;
   final Duration animationDuration;
   final Curve animationCurve;
-  final Widget innerWidget;
-  final Widget innerIcon;
+  final Widget? innerWidget;
+  final Widget? innerIcon;
   final bool showTotalPercentage;
-  final String label;
-  final TextStyle percentageTextStyle;
-  final TextStyle labelTextStyle;
+  final String? label;
+  final TextStyle? percentageTextStyle;
+  final TextStyle? labelTextStyle;
 
   ///A widget to make multiple progress bar to show
   ///multiple values in a single bar
@@ -98,11 +98,11 @@ class MultiCircularSlider extends StatefulWidget {
   ///
   ///`percentageTextStyle` TextStyle which you want to give to percentage
   ///
-  MultiCircularSlider({
-    Key key,
-    @required this.values,
-    @required this.colors,
-    @required this.size,
+  const MultiCircularSlider({
+    Key? key,
+    required this.values,
+    required this.colors,
+    required this.size,
     this.trackWidth = 32.0,
     this.progressBarWidth = 32.0,
     this.trackColor = Colors.grey,
@@ -117,13 +117,13 @@ class MultiCircularSlider extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MultiCircularSliderState createState() => _MultiCircularSliderState();
+  MultiCircularSliderState createState() => MultiCircularSliderState();
 }
 
-class _MultiCircularSliderState extends State<MultiCircularSlider> with SingleTickerProviderStateMixin {
+class MultiCircularSliderState extends State<MultiCircularSlider> with SingleTickerProviderStateMixin {
   //for animation
-  AnimationController _controller;
-  Animation<double> _animation;
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
   //for calculation
   double percentage = 0.0;
@@ -133,9 +133,9 @@ class _MultiCircularSliderState extends State<MultiCircularSlider> with SingleTi
     super.initState();
 
     //calculating total percentage
-    widget.values.forEach((value) {
+    for (final value in widget.values) {
       percentage += value;
-    });
+    }
 
     //initializing controller
     _controller = AnimationController(vsync: this, duration: widget.animationDuration);
@@ -163,79 +163,87 @@ class _MultiCircularSliderState extends State<MultiCircularSlider> with SingleTi
     //actual widget starts here
     return AnimatedBuilder(
       animation: _animation,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         //custom painter to draw multiple progress bar
         return CustomPaint(
-          painter: ProgressBarPainter(
-            size: widget.size,
-            values: List.generate(widget.values.length, (index) => widget.values[index] * _animation.value),
-            colors: widget.colors,
-            progressBarWidth: widget.progressBarWidth,
-            trackColor: widget.trackColor,
-            trackWidth: widget.trackWidth,
-          ),
+          painter: _buildProgressBarPainter(),
           //inner widget with shadow
           child: Container(
             height: widget.size,
             width: widget.size,
             padding: const EdgeInsets.all(42.0),
-            child: widget.innerWidget != null
-                ? widget.innerWidget
-                : Container(
-                    padding: const EdgeInsets.all(32.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.07),
-                          blurRadius: 10.0,
-                          offset: Offset(0.0, -18.0),
-                        ),
-                      ],
-                    ),
-                    child: widget.showTotalPercentage
-                        ? Column(
-                            children: [
-                              //inner icon
-                              widget.innerIcon != null ? widget.innerIcon : SizedBox.shrink(),
-                              //total percentage
-                              Text(
-                                '${(percentage * _animation.value * 100).ceil()}%',
-                                textAlign: TextAlign.center,
-                                style: widget.percentageTextStyle != null
-                                    ? widget.percentageTextStyle
-                                    : TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 28.0,
-                                        color: Color(0xFF012C61),
-                                      ),
-                              ),
-                              //spacing
-                              SizedBox(height: 8.0),
-                              //text
-                              widget.label != null
-                                  ? FittedBox(
-                                      child: Text(
-                                        widget.label,
-                                        style: widget.labelTextStyle != null
-                                            ? widget.labelTextStyle
-                                            : TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 22.0,
-                                                color: Color(0xFF939AA4),
-                                              ),
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          )
-                        : SizedBox.shrink(),
+            child: widget.innerWidget ??
+                Container(
+                  padding: const EdgeInsets.all(32.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.07),
+                        blurRadius: 10.0,
+                        offset: const Offset(0.0, -18.0),
+                      ),
+                    ],
                   ),
+                  child: widget.showTotalPercentage
+                      ? Column(
+                          children: [
+                            //inner icon
+                            _buildInnerIcon(),
+                            //total percentage
+                            _buildTotalPercentage(),
+                            //spacing
+                            const SizedBox(height: 8.0),
+                            //text
+                            _buildTextWidget(),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
           ),
         );
       },
-      child: widget.innerWidget != null ? widget.innerWidget : SizedBox.shrink(),
+      child: widget.innerWidget ?? const SizedBox.shrink(),
     );
   }
+
+  /// Builder Functions
+  ///
+  ///
+  CustomPainter _buildProgressBarPainter() => ProgressBarPainter(
+        size: widget.size,
+        values: List.generate(widget.values.length, (index) => widget.values[index] * _animation.value),
+        colors: widget.colors,
+        progressBarWidth: widget.progressBarWidth,
+        trackColor: widget.trackColor,
+        trackWidth: widget.trackWidth,
+      );
+
+  Widget _buildInnerIcon() => widget.innerIcon ?? const SizedBox.shrink();
+
+  Widget _buildTotalPercentage() => Text(
+        '${(percentage * _animation.value * 100).ceil()}%',
+        textAlign: TextAlign.center,
+        style: widget.percentageTextStyle ??
+            const TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 28.0,
+              color: Color(0xFF012C61),
+            ),
+      );
+
+  Widget _buildTextWidget() => widget.label != null
+      ? FittedBox(
+          child: Text(
+            widget.label!,
+            style: widget.labelTextStyle ??
+                const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22.0,
+                  color: Color(0xFF939AA4),
+                ),
+          ),
+        )
+      : const SizedBox.shrink();
 }

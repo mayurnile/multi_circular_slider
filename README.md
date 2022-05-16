@@ -23,7 +23,7 @@ Add
 
 ```
 dependencies:
-  multi_circular_slider: ^latest_version
+  multi_circular_slider: ^1.0.0
 ```
 
 to your `pubspec.yaml`, and run

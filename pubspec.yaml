@@ -1,11 +1,11 @@
 name: multi_circular_slider
 description: A Flutter package for Android, iOS & Web which helps creating multi-layered animated circular progress bar which can help display multiple values in a single bar.
-version: 0.0.3
+version: 1.0.0
 homepage: https://github.com/mayurnile/multi_circular_slider.git
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.16.1 <3.0.0"
+  flutter: ">=1.20.0"
 
 dependencies:
   flutter:
@@ -14,6 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.1
 
 flutter:
 
