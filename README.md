@@ -23,7 +23,7 @@ Add
 
 ```
 dependencies:
-  multi_circular_slider: ^1.0.0
+  multi_circular_slider: ^1.1.0
 ```
 
 to your `pubspec.yaml`, and run
@@ -48,6 +48,7 @@ And add it in its most basic form like it:
 ```dart
 MultiCircularSlider(
     size: MediaQuery.of(context).size.width * 0.8,
+    progressBarType: MultiCircularSliderType.circular,
     values: [0.2, 0.1, 0.3, 0.25],
     colors: [Color(0xFFFD1960), Color(0xFF29D3E8), Color(0xFF18C737), Color(0xFFFFCC05)],
     showTotalPercentage: true,
@@ -60,6 +61,7 @@ There are additional optional parameters one can initialize the slider with.
 ```dart
 MultiCircularSlider(
     size: MediaQuery.of(context).size.width * 0.8,
+    progressBarType: MultiCircularSliderType.circular, // the type of indictor you want circular or linear
     values: [0.2, 0.1, 0.3, 0.25],
     colors: [Color(0xFFFD1960), Color(0xFF29D3E8), Color(0xFF18C737), Color(0xFFFFCC05)],
     showTotalPercentage: true, // to display total percentage in center
@@ -83,6 +85,7 @@ MultiCircularSlider(
 | size | Size | | the space widget should take up on screen |
 | values | List<double> | | pass different percentages you want to show which sum up to 1.0 or less |
 | colors | List<Color> | | different colors which you want to give to the progress bars (NOTE: length of `values` & `colors` should be same) |
+| progressBarType | MultiCircularSliderType | | to specify the type of progress indicator you want |
 | showTotalPercentage | bool | true | whether to show total percentage in center or not |
 | label | String | | any label text which you want to show below total percentage |
 | animationDuration | Duration | Duration(milliseconds: 500) | the duration you want for the animation |

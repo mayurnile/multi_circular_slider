@@ -1,7 +1,7 @@
 part of circular_slider;
 
-/// CustomPainter class to draw progress bar curves
-class ProgressBarPainter extends CustomPainter {
+/// CustomPainter class to draw linear progress bar
+class LinearProgressBarPainter extends CustomPainter {
   //size of the widget
   final double size;
 
@@ -21,7 +21,7 @@ class ProgressBarPainter extends CustomPainter {
   final Color trackColor;
 
   //constructor
-  ProgressBarPainter({
+  LinearProgressBarPainter({
     required this.size,
     this.trackWidth = 32.0,
     this.progressBarWidth = 32.0,
@@ -32,13 +32,6 @@ class ProgressBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    //base angle of curve
-    const double baseAngle = 180.0;
-    //actual starting angle of arc
-    final double startAngle = degreeToRadians(baseAngle);
-    //total length of the track of progressbar
-    final double trackSweepAngle = degreeToRadians(baseAngle);
-
     //shadow paint
     final shadowPaint = Paint()
       ..strokeCap = StrokeCap.round
@@ -49,12 +42,11 @@ class ProgressBarPainter extends CustomPainter {
         10.0,
       )
       ..strokeWidth = trackWidth;
+
     //draw shadow
-    drawCurve(
-      canvas,
-      size,
-      startAngle,
-      trackSweepAngle,
+    canvas.drawLine(
+      const Offset(0, 0),
+      Offset(size.width, 0),
       shadowPaint,
     );
 
@@ -64,12 +56,11 @@ class ProgressBarPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..color = trackColor
       ..strokeWidth = trackWidth;
-    //progress bar track curve
-    drawCurve(
-      canvas,
-      size,
-      startAngle,
-      trackSweepAngle,
+
+    //draw progrwss bar track
+    canvas.drawLine(
+      const Offset(0, 0),
+      Offset(size.width, 0),
       trackPaint,
     );
 
@@ -78,74 +69,37 @@ class ProgressBarPainter extends CustomPainter {
     double totalPercentage = 0.0;
 
     //to store values in reverse order
-    List<Shader> progressBars = [];
+    List<LinearShader> progressBarsPainters = [];
 
     //iterating through list for calculating values
     for (int i = 0; i < length; i++) {
-      double percentage = baseAngle * values[i];
-      totalPercentage += percentage;
-      double sweepAngle = degreeToRadians(totalPercentage);
+      totalPercentage += values[i];
 
       //progress bar paint
       final progressBarPaint = Paint()
-        // ..shader = progressBarGradient.createShader(progressBarRect)
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke
         ..color = colors[i]
         ..strokeWidth = trackWidth;
 
       //adding values to list
-      progressBars.insert(
+      progressBarsPainters.insert(
         0,
-        Shader(
-          startAngle: startAngle,
-          sweepAngle: sweepAngle,
+        LinearShader(
+          width: size.width * totalPercentage,
           paint: progressBarPaint,
         ),
       );
     }
 
     //drawing actual progress bars
-    for (final progressBar in progressBars) {
-      drawCurve(
-        canvas,
-        size,
-        progressBar.startAngle,
-        progressBar.sweepAngle,
-        progressBar.paint,
+    for (final progressBarPaint in progressBarsPainters) {
+      canvas.drawLine(
+        const Offset(0, 0),
+        Offset(progressBarPaint.width, 0),
+        progressBarPaint.paint,
       );
     }
-  }
-
-  ///[Logic for drawing curve]
-  drawCurve(
-    Canvas canvas,
-    Size size,
-    double startAngle,
-    double sweepAngle,
-    Paint paint,
-  ) {
-    double radius = size.width / 2;
-    Offset center = Offset(
-      size.width / 2,
-      size.height / 2,
-    );
-
-    canvas.drawArc(
-      Rect.fromCircle(
-        center: center,
-        radius: radius,
-      ),
-      startAngle,
-      sweepAngle,
-      false,
-      paint,
-    );
-  }
-
-  ///[Logic for converting degree to radians]
-  degreeToRadians(double degree) {
-    return degree * (math.pi / 180);
   }
 
   @override
@@ -155,14 +109,12 @@ class ProgressBarPainter extends CustomPainter {
 }
 
 /// class for storing values of the ProgressBar
-class Shader {
-  final double startAngle;
-  final double sweepAngle;
+class LinearShader {
+  final double width;
   final Paint paint;
 
-  Shader({
-    required this.startAngle,
-    required this.sweepAngle,
+  LinearShader({
+    required this.width,
     required this.paint,
   });
 }

@@ -13,3 +13,6 @@
 ## [1.0.0] - 16th May 2022.
 * Migrated to Null Safety
 * Solved issue track width not getting adjusted
+
+## [1.1.0] - 10th Aug 2022.
+* Added support for Linear Progress Indicator

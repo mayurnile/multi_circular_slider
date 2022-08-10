@@ -29,6 +29,7 @@ class MyTestWidget extends StatelessWidget {
         child: Center(
           child: MultiCircularSlider(
             size: MediaQuery.of(context).size.width * 0.8,
+            progressBarType: MultiCircularSliderType.circular,
             values: const [0.2, 0.1, 0.3, 0.28],
             colors: const [Color(0xFFFD1960), Color(0xFF29D3E8), Color(0xFF18C737), Color(0xFFFFCC05)],
             showTotalPercentage: true,

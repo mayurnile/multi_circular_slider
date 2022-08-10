@@ -4,10 +4,19 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-part 'progress_bar_painter.dart';
+part 'circular_progress_bar_painter.dart';
+part 'linear_progress_bar_painter.dart';
+
+enum MultiCircularSliderType {
+  // to create a linear progress bar
+  linear,
+  // to create a circular progress bar
+  circular,
+}
 
 class MultiCircularSlider extends StatefulWidget {
   final double size;
+  final MultiCircularSliderType progressBarType;
   final double trackWidth;
   final double progressBarWidth;
   final List<double> values;
@@ -40,6 +49,8 @@ class MultiCircularSlider extends StatefulWidget {
   ///
   ///`size` the space widget should take up on screen
   ///
+  ///
+  ///`progressBarType` the type of progress bar you want to show
   ///
   ///
   ///`trackWidth` stroke width of the progressBar track
@@ -103,6 +114,7 @@ class MultiCircularSlider extends StatefulWidget {
     required this.values,
     required this.colors,
     required this.size,
+    required this.progressBarType,
     this.trackWidth = 32.0,
     this.progressBarWidth = 32.0,
     this.trackColor = Colors.grey,
@@ -165,44 +177,7 @@ class MultiCircularSliderState extends State<MultiCircularSlider> with SingleTic
       animation: _animation,
       builder: (BuildContext context, Widget? child) {
         //custom painter to draw multiple progress bar
-        return CustomPaint(
-          painter: _buildProgressBarPainter(),
-          //inner widget with shadow
-          child: Container(
-            height: widget.size,
-            width: widget.size,
-            padding: const EdgeInsets.all(42.0),
-            child: widget.innerWidget ??
-                Container(
-                  padding: const EdgeInsets.all(32.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.07),
-                        blurRadius: 10.0,
-                        offset: const Offset(0.0, -18.0),
-                      ),
-                    ],
-                  ),
-                  child: widget.showTotalPercentage
-                      ? Column(
-                          children: [
-                            //inner icon
-                            _buildInnerIcon(),
-                            //total percentage
-                            _buildTotalPercentage(),
-                            //spacing
-                            const SizedBox(height: 8.0),
-                            //text
-                            _buildTextWidget(),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
-                ),
-          ),
-        );
+        return widget.progressBarType == MultiCircularSliderType.circular ? _buildCircularProgressBar() : _buildLinearProgressBar();
       },
       child: widget.innerWidget ?? const SizedBox.shrink(),
     );
@@ -211,14 +186,91 @@ class MultiCircularSliderState extends State<MultiCircularSlider> with SingleTic
   /// Builder Functions
   ///
   ///
-  CustomPainter _buildProgressBarPainter() => ProgressBarPainter(
-        size: widget.size,
-        values: List.generate(widget.values.length, (index) => widget.values[index] * _animation.value),
-        colors: widget.colors,
-        progressBarWidth: widget.progressBarWidth,
-        trackColor: widget.trackColor,
-        trackWidth: widget.trackWidth,
+  Widget _buildCircularProgressBar() => CustomPaint(
+        painter: _buildProgressBarPainter(),
+        //inner widget with shadow
+        child: Container(
+          height: widget.size,
+          width: widget.size,
+          padding: const EdgeInsets.all(42.0),
+          child: widget.innerWidget ??
+              Container(
+                padding: const EdgeInsets.all(32.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.07),
+                      blurRadius: 10.0,
+                      offset: const Offset(0.0, -18.0),
+                    ),
+                  ],
+                ),
+                child: widget.showTotalPercentage
+                    ? Column(
+                        children: [
+                          //inner icon
+                          _buildInnerIcon(),
+                          //total percentage
+                          _buildTotalPercentage(),
+                          //spacing
+                          const SizedBox(height: 8.0),
+                          //text
+                          _buildTextWidget(),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+        ),
       );
+
+  Widget _buildLinearProgressBar() => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // inner widget
+          widget.innerWidget ?? const SizedBox.shrink(),
+          // total percentage
+          widget.showTotalPercentage
+              ? Column(
+                  children: [
+                    //inner icon
+                    _buildInnerIcon(),
+                    //total percentage
+                    _buildTotalPercentage(),
+                    //spacing
+                    const SizedBox(height: 8.0),
+                    //text
+                    _buildTextWidget(),
+                  ],
+                )
+              : const SizedBox.shrink(),
+          // linear progress bar
+          CustomPaint(
+            painter: _buildProgressBarPainter(),
+            size: Size(widget.size, widget.size),
+          ),
+        ],
+      );
+
+  CustomPainter _buildProgressBarPainter() => widget.progressBarType == MultiCircularSliderType.circular
+      ? CircularProgressBarPainter(
+          size: widget.size,
+          values: List.generate(widget.values.length, (index) => widget.values[index] * _animation.value),
+          colors: widget.colors,
+          progressBarWidth: widget.progressBarWidth,
+          trackColor: widget.trackColor,
+          trackWidth: widget.trackWidth,
+        )
+      : LinearProgressBarPainter(
+          size: widget.size,
+          values: List.generate(widget.values.length, (index) => widget.values[index] * _animation.value),
+          colors: widget.colors,
+          progressBarWidth: widget.progressBarWidth,
+          trackColor: widget.trackColor,
+          trackWidth: widget.trackWidth,
+        );
 
   Widget _buildInnerIcon() => widget.innerIcon ?? const SizedBox.shrink();
 
