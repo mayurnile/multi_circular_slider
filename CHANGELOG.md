@@ -16,3 +16,9 @@
 
 ## [1.1.0] - 10th Aug 2022.
 * Added support for Linear Progress Indicator
+
+## [1.1.1] - 28th Apr 2023.
+* Fixed bug (progressBarWidth not working).
+* Added support for specifying starting angle and sweep angle of Circular Progress Bar.
+* Added support for specifying innerWidget padding.
+* Updated Readme.
