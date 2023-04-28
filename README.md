@@ -92,8 +92,11 @@ MultiCircularSlider(
 | animationCurve | Curve | Curves.easeInOutCubic | the curve you want for animation |
 | innerIcon | Widget | | the icon which you can display above the total percentage text |
 | innerWidget | Widget | | the widget you want to show inside the circular progress bar (NOTE : innerWidget will only de displayed if showTotalPercentage is false) |
+| innerWidgetPadding | EdgeInsets | size * 0.15 | padding between inner widget and progressBar |
 | trackColor | Color | Colors.grey | color of the track of progressBar |
-| progressBarWidth | double | 32.0 | stroke width of the progressBar |
+| progressBarWidth | double | trackWidth | stroke width of the progressBar |
 | trackWidth | double | 32.0 | stroke width of the progressBar track |
 | labelTextStyle | TextStyle | | TextStyle which you want to give to label |
 | percentageTextStyle | TextStyle | | TextStyle which you want to give to percentage |
+| startAngle | double | 180.0 | starting angle of circular progress bar |
+| sweepAngle | double | 180.0 | sweep angle of circular progress bar |

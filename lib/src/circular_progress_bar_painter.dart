@@ -20,22 +20,28 @@ class CircularProgressBarPainter extends CustomPainter {
   //color of track
   final Color trackColor;
 
+  //color of track
+  final double baseAngle;
+
+  //color of track
+  final double startAngle;
+
   //constructor
   CircularProgressBarPainter({
     required this.size,
     this.trackWidth = 32.0,
-    this.progressBarWidth = 32.0,
+    required this.progressBarWidth,
     required this.values,
     required this.colors,
     this.trackColor = Colors.grey,
+    required this.baseAngle,
+    required this.startAngle,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    //base angle of curve
-    const double baseAngle = 180.0;
     //actual starting angle of arc
-    final double startAngle = degreeToRadians(baseAngle);
+    final double startAngleInRadians = degreeToRadians(startAngle);
     //total length of the track of progressbar
     final double trackSweepAngle = degreeToRadians(baseAngle);
 
@@ -49,11 +55,12 @@ class CircularProgressBarPainter extends CustomPainter {
         10.0,
       )
       ..strokeWidth = trackWidth;
+    // ..strokeWidth = math.max(trackWidth, progressBarWidth);
     //draw shadow
     drawCurve(
       canvas,
       size,
-      startAngle,
+      startAngleInRadians,
       trackSweepAngle,
       shadowPaint,
     );
@@ -68,7 +75,7 @@ class CircularProgressBarPainter extends CustomPainter {
     drawCurve(
       canvas,
       size,
-      startAngle,
+      startAngleInRadians,
       trackSweepAngle,
       trackPaint,
     );
@@ -91,13 +98,13 @@ class CircularProgressBarPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke
         ..color = colors[i]
-        ..strokeWidth = trackWidth;
+        ..strokeWidth = progressBarWidth;
 
       //adding values to list
       progressBars.insert(
         0,
         CircularShader(
-          startAngle: startAngle,
+          startAngle: startAngleInRadians,
           sweepAngle: sweepAngle,
           paint: progressBarPaint,
         ),

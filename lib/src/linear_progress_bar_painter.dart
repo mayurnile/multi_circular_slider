@@ -24,7 +24,7 @@ class LinearProgressBarPainter extends CustomPainter {
   LinearProgressBarPainter({
     required this.size,
     this.trackWidth = 32.0,
-    this.progressBarWidth = 32.0,
+    required this.progressBarWidth,
     required this.values,
     required this.colors,
     this.trackColor = Colors.grey,
@@ -42,6 +42,7 @@ class LinearProgressBarPainter extends CustomPainter {
         10.0,
       )
       ..strokeWidth = trackWidth;
+    // ..strokeWidth = math.max(trackWidth, progressBarWidth);
 
     //draw shadow
     canvas.drawLine(
@@ -80,7 +81,7 @@ class LinearProgressBarPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke
         ..color = colors[i]
-        ..strokeWidth = trackWidth;
+        ..strokeWidth = progressBarWidth;
 
       //adding values to list
       progressBarsPainters.insert(
